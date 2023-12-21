@@ -4,7 +4,7 @@ import pool from "../models/database";
 export const classesController = {
     getClasses: async (req: Request, res: Response) => {
         try {
-            const result = await pool.query('SELECT asignatura,nombre,apellidoPaterno,apellidoMaterno FROM clases c INNER JOIN usuarios where c.profesor=idUsuarios');
+            const result = await pool.query('SELECT profesor,idClases,asignatura,nombre,apellidoPaterno,apellidoMaterno FROM clases c INNER JOIN usuarios where c.profesor=idUsuarios');
             res.send(result[0])
         } catch (error) {
 

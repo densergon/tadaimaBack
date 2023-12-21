@@ -3,8 +3,8 @@ import { homeworksController } from "../controllers/homeworks.controller";
 
 const router = Router();
 
-router.get('/', homeworksController.getHomeworks)
-router.get('/:id', homeworksController.getHomework)
+router.get('/clase/:id', homeworksController.getHomeworks)
+router.get('/tarea/:id', homeworksController.getHomework)
 router.post('/', homeworksController.createHomework)
 router.put('/:id', homeworksController.updateHomework)
 router.delete('/:id', homeworksController.deleteHomework)
