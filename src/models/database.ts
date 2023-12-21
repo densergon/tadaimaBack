@@ -5,7 +5,7 @@ const pool = createPool({
     host: '127.0.0.1',
     user: 'root',
     password: "M6ZNw29M9zoCPd",
-    database: 'qwerty',
+    database: 'mydb',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0

@@ -4,5 +4,8 @@ import { studentsController } from "../controllers/students.controller";
 const router = Router();
 
 router.get('/', studentsController.getStudents)
+router.get('/:id', studentsController.getStudent)
+router.post('/', studentsController.createStudent)
+router.put('/:id', studentsController.updateStudent)
 
 export default router

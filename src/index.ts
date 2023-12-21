@@ -1,12 +1,25 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import authRoutes from './routes/auth.routes'
-import usuariosRoutes from './routes/usuarios.routes'
+import classesRoutes from './routes/classes.routes'
+import studentsRoutes from './routes/students.routes'
+import homeworksRoutes from './routes/homeworks.routes'
+import teachersRoutes from './routes/teachers.routes'
+import * as dotenv from "dotenv";
+import morgan from 'morgan'
+dotenv.config();
+
+
 const app = express();
-
+const port = process.env.PORT;
+app.set('port', port)
 app.use(express.json())
+app.use(morgan('dev'));
 app.use('/api/auth', authRoutes)
-app.use('/api/users', usuariosRoutes)
+app.use('/api/students', studentsRoutes)
+app.use('/api/teachers', teachersRoutes)
+app.use('/api/classes', classesRoutes)
+app.use('/api/homeworks', homeworksRoutes)
 
-app.listen(3000, () => {
-    console.log('Listening at port ', 3000)
+app.listen(app.get('port'), () => {
+    console.log('Listening at port ', app.get('port'))
 })
