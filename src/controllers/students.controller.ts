@@ -11,9 +11,15 @@ export const studentsController = {
         }
     },
     getStudent: async (req: Request, res: Response) => {
+        interface data {
+            nombre: string,
+            email: string,
+            boleta: string | null
+        }
         try {
-            const result = await pool.query('SELECT * FROM usuarios where idUsuarios=? and rol=3', [req.params.id])
-            res.send(result[0])
+            const result = await pool.query('SELECT nombre,boleta,email FROM usuarios INNER JOIN alumnos where idUsuarios=? and rol=3', [req.params.id])
+            const teacher = result[0] as Array<data>;
+            res.send(teacher[0])
         } catch (error) {
             res.send({
                 message: 'Ocurrio un error'
@@ -48,6 +54,27 @@ export const studentsController = {
         } catch (error) {
             console.error('Error al actualizar el alumno: ', error);
             res.status(500).send({ message: 'Error al actualizar el alumno' });
+        }
+    },
+    boletaStudent: async (req: Request, res: Response) => {
+        const { id, boleta } = req.body;
+        console.log(id)
+        console.log(boleta)
+        try {
+            const [result] = await pool.execute(
+                'UPDATE Alumnos SET boleta = ? WHERE idUsuario = ?',
+                [boleta, id]
+            );
+
+            // Verificar si la fila fue actualizada
+            if ((result as any).affectedRows === 0) {
+                return res.status(404).send('Alumno no encontrado o la boleta ya está actualizada.');
+            }
+
+            res.status(200).json({ message: 'Boleta actualizada con éxito' });
+        } catch (error) {
+            console.error('Error al actualizar la boleta:', error);
+            res.status(500).send('Error en el servidor');
         }
     }
 }

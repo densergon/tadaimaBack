@@ -3,17 +3,19 @@ import pool from "../models/database";
 
 export const classesController = {
     getClasses: async (req: Request, res: Response) => {
+        const { id } = req.params;
         try {
-            const result = await pool.query('SELECT profesor,idClases,asignatura,nombre,apellidoPaterno,apellidoMaterno FROM clases c INNER JOIN usuarios where c.profesor=idUsuarios');
+            const result = await pool.query('SELECT * FROM curso INNER JOIN usuarios ON curso.profesor=idUsuarios', [id]);
             res.send(result[0])
         } catch (error) {
 
         }
     },
     getClass: async (req: Request, res: Response) => {
+        const { id } = req.params;
         try {
-            const result = await pool.query('SELECT asignatura,nombre,apellidoPaterno,apellidoMaterno FROM clases c INNER JOIN usuarios u WHERE c.idClases=? && c.profesor=u.idUsuarios', [req.params.id])
-            res.send(result[0])
+            const result = await pool.query('SELECT curso,idCurso FROM curso WHERE idCurso=?', [id])
+            res.send((result[0] as Array<any>)[0])
         } catch (error) {
 
         }

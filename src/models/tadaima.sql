@@ -80,7 +80,6 @@ CREATE TABLE IF NOT EXISTS `tadaima`.`Materiales` (
 ENGINE = InnoDB;
 
 
-
 -- -----------------------------------------------------
 -- Table `tadaima`.`Tareas`
 -- -----------------------------------------------------
@@ -101,16 +100,18 @@ CREATE TABLE IF NOT EXISTS `tadaima`.`Tareas` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
 -- -----------------------------------------------------
 -- Table `tadaima`.`Alumnos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tadaima`.`Alumnos` (
-  `idAlumno` INT NOT NULL AUTO_INCREMENT,
+  `idAlumno` VARCHAR(90) NOT NULL,
   `idUsuario` INT NOT NULL,
   `boleta` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`idAlumno`),
   UNIQUE INDEX `boleta_UNIQUE` (`boleta` ASC) VISIBLE,
   INDEX `usuario_idx` (`idUsuario` ASC) VISIBLE,
+  UNIQUE INDEX `idAlumno_UNIQUE` (`idAlumno` ASC) VISIBLE,
   CONSTRAINT `usuario`
     FOREIGN KEY (`idUsuario`)
     REFERENCES `tadaima`.`Usuarios` (`idUsuarios`)
@@ -125,14 +126,19 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `tadaima`.`Pertenece` (
   `idPertenece` INT NOT NULL,
   `idCurso` INT NOT NULL,
-  `idAlumno` INT NOT NULL,
+  `idAlumno` VARCHAR(90) NOT NULL,
   PRIMARY KEY (`idPertenece`),
   INDEX `curso_idx` (`idCurso` ASC) VISIBLE,
-  INDEX `alumno_idx` (`idAlumno` ASC) VISIBLE,
+  INDEX `quien_idx` (`idAlumno` ASC) VISIBLE,
   CONSTRAINT `curso`
     FOREIGN KEY (`idCurso`)
     REFERENCES `tadaima`.`Curso` (`idCurso`)
     ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `quien`
+    FOREIGN KEY (`idAlumno`)
+    REFERENCES `tadaima`.`Alumnos` (`idAlumno`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -142,11 +148,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tadaima`.`Entregadas` (
   `idEntregadas` INT NOT NULL AUTO_INCREMENT,
-  `idAlumno` INT NOT NULL,
+  `idAlumno` VARCHAR(90) NOT NULL,
   `idTarea` INT NOT NULL,
   `calificacion` DOUBLE NULL DEFAULT NULL,
   `delivered` DATETIME NULL,
-  `uri` VARCHAR(85) NOT NULL,
   PRIMARY KEY (`idEntregadas`),
   INDEX `estudiante_idx` (`idAlumno` ASC) VISIBLE,
   INDEX `tarea_idx` (`idTarea` ASC) VISIBLE,
