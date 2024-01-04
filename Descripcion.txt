@@ -1,0 +1,7 @@
+BACKEND
+Administrador:
+	GET teachers
+	Create teacher 
+	Update teacher
+	Delete teacher
+

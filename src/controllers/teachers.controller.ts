@@ -45,11 +45,11 @@ export const teachersController = {
     updateTeacher: async (req: Request, res: Response) => {
         try {
             const idTeacher = req.params.id;
-            const { nombre, apellidoPaterno, apellidoMaterno, email, password } = req.body;
+            const { nombre, apellidoPaterno, apellidoMaterno, correoElectronico, password } = req.body;
             // Actualizar la información en la tabla usuarios
             await pool.execute(
-                'UPDATE Usuarios SET nombre = ?, apellidoPaterno = ?, apellidoMaterno = ?, email= ?, password = ? WHERE idUsuarios = ?',
-                [nombre, apellidoPaterno, apellidoMaterno, email, password, idTeacher]
+                'UPDATE usuarios SET nombre = ?, apellidoPaterno = ?, apellidoMaterno = ?, email= ?, password = ? WHERE idUsuarios = ?',
+                [nombre, apellidoPaterno, apellidoMaterno, correoElectronico, password, idTeacher]
             );
 
             res.status(200).send({ message: 'Usuario actualizado' });

@@ -36,8 +36,10 @@ export const materialesController = {
     },
     deleteMaterial: async (req: Request, res: Response) => {
         const { id } = req.params;
+        console.log(id)
         try {
             const result = await pool.execute('DELETE FROM materiales WHERE idMateriales =?', [id])
+            console.log(result)
             res.status(200).send({ message: 'Borrado existosamente' })
         } catch (error) {
             console.log(error)

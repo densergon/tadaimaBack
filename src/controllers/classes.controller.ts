@@ -21,12 +21,13 @@ export const classesController = {
         }
     },
     createClass: async (req: Request, res: Response) => {
+        const { nombre, profesor } = req.body;
+        console.log(nombre, profesor)
         try {
-            const { asignatura, profesor } = req.body;
-            const result = await pool.execute('INSERT INTO clases (asignatura,profesor) VALUES (?,?)', [asignatura, profesor])
+            const result = await pool.execute('INSERT INTO curso (curso,profesor) VALUES (?,?)', [nombre, profesor])
             res.send({ message: "Creado exitosamente" })
         } catch (error) {
-
+            console.log(error)
         }
     },
     updateClass: async (req: Request, res: Response) => {
@@ -38,7 +39,14 @@ export const classesController = {
 
         }
     },
-    deleteClass: (req: Request, res: Response) => {
-        res.send('Clase eliminada')
+    deleteClass: async (req: Request, res: Response) => {
+        try {
+            await pool.execute('DELETE FROM curso WHERE idCurso =?', [req.params.id]);
+
+            res.status(200).send('Clase eliminada')
+        } catch (error) {
+            console.log(error)
+            res.status(401).send({ message: "Hubo un error al eliminar" })
+        }
     }
 }
