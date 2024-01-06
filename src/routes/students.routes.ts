@@ -4,7 +4,7 @@ import { studentsController } from "../controllers/students.controller";
 const router = Router();
 
 router.get('/', studentsController.getStudents)
-router.get('/curso/:id', studentsController.getStudents)
+router.get('/curso/:id', studentsController.getStudentsCourse)
 router.get('/:id', studentsController.getStudent)
 router.post('/', studentsController.createStudent)
 router.put('/:id', studentsController.updateStudent)

@@ -10,6 +10,16 @@ export const studentsController = {
 
         }
     },
+    getStudentsCourse: async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const curso = Number(id)
+        try {
+            const result = await pool.query('SELECT nombre,boleta FROM pertenece p INNER JOIN alumnos a ON p.idAlumno=a.idAlumno INNER JOIN usuarios u ON a.idUsuario=u.idUsuarios  where idCurso=?', [curso]);
+            res.status(200).send(result[0])
+        } catch (error) {
+            console.log(error)
+        }
+    },
     getStudent: async (req: Request, res: Response) => {
         interface data {
             nombre: string,

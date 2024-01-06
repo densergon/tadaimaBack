@@ -7,11 +7,14 @@ import homeworksRoutes from './routes/homeworks.routes'
 import teachersRoutes from './routes/teachers.routes'
 import cursosRoutes from './routes/course.routes'
 import materialesRoutes from './routes/materiales.routes'
+import deliveredRoutes from "./routes/delivered.routes"
 import * as dotenv from "dotenv";
 import morgan from 'morgan'
 import cors from 'cors'
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
+import { chatController } from './controllers/chat.controller'
+import chatRoutes from './routes/chat.routes'
 dotenv.config();
 
 
@@ -30,8 +33,11 @@ app.use('/api/students', studentsRoutes)
 app.use('/api/teachers', teachersRoutes)
 app.use('/api/classes', classesRoutes)
 app.use('/api/homeworks', homeworksRoutes)
+app.use('/api/delivered', deliveredRoutes)
 app.use('/api/cursos', cursosRoutes)
 app.use('/api/materiales', materialesRoutes)
+app.use('/api/chat', chatRoutes)
+
 const server = createServer(app)
 const io = new Server(server)
 io.on("connection", (socket) => {
@@ -39,8 +45,11 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log('Disconnected')
     })
-    socket.on('chat message', (message) => {
-        io.emit('chat message', { message: "Hola" })
+    socket.on('chat message', async (message) => {
+        if (await chatController.newMessage(message)) {
+            //io.emit('chat message', { mensaje: "Hola" })
+            console.log('registrado')
+        }
     })
 })
 server.listen(app.get('port'), () => {

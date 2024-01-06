@@ -3,6 +3,8 @@ import { chatController } from '../controllers/chat.controller'
 
 const router = Router()
 
-router.post('/', chatController.newMessage)
+router.get('/conversacion/:id', chatController.getMessages)
+router.get('/conversaciones/:id', chatController.getConversaciones)
+router.post('/data', chatController.getNombre)
 
 export default router

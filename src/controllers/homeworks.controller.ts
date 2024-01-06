@@ -12,8 +12,15 @@ export const homeworksController = {
             console.log(error)
         }
     },
-    getHomework: () => {
-
+    getHomework: async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const result = await pool.query(`SELECT * FROM tareas where idTareas=?`, [id])
+            res.send((result[0] as Array<any>)[0])
+        } catch (error) {
+            console.log(error)
+            res.status(401).send({ message: "Ocurrio un error" })
+        }
     },
     getCurrent: async (req: Request, res: Response) => {
         const { id } = req.params;
@@ -66,8 +73,15 @@ export const homeworksController = {
     updateHomework: () => {
 
     },
-    deleteHomework: () => {
-
+    deleteHomework: async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const result = await pool.execute(`DELETE FROM tareas WHERE idTareas=?`, [id])
+            res.status(200).send({ message: "Eliminada exitosamente" })
+        } catch (error) {
+            console.log(error)
+            res.status(401).send({ message: "Ocurrio un error" })
+        }
     }
 }
 
