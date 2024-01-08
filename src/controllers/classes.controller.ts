@@ -5,7 +5,7 @@ export const classesController = {
     getClasses: async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
-            const result = await pool.query('SELECT * FROM curso INNER JOIN usuarios ON curso.profesor=idUsuarios', [id]);
+            const result = await pool.query('SELECT * FROM curso INNER JOIN usuarios ON curso.profesor=idUsuarios where curso.profesor=?', [id]);
             res.send(result[0])
         } catch (error) {
 
