@@ -14,9 +14,38 @@ export const studentsController = {
         const { id } = req.params;
         const curso = Number(id)
         try {
-            const result = await pool.query('SELECT nombre,boleta FROM pertenece p INNER JOIN alumnos a ON p.idAlumno=a.idAlumno INNER JOIN usuarios u ON a.idUsuario=u.idUsuarios  where idCurso=?', [curso]);
+            const result = await pool.query(`
+            SELECT a.idAlumno, u.nombre, a.boleta 
+FROM pertenece p 
+INNER JOIN alumnos a ON p.idAlumno = a.idAlumno 
+INNER JOIN usuarios u ON a.idUsuario = u.idUsuarios  
+WHERE p.idCurso = ?`, [curso]);
             res.status(200).send(result[0])
         } catch (error) {
+            console.log(error)
+        }
+    },
+    insertStudent: async (req: Request, res: Response) => {
+        const { boleta, idCurso } = req.body;
+        interface data {
+            nombre: string,
+            email: string,
+            boleta: string | null,
+            idAlumno: string
+        }
+
+        try {
+            const result = await pool.query('SELECT idAlumno FROM alumnos where boleta=?', [boleta]);
+            const student = result[0] as Array<data>;
+            const id = student[0].idAlumno;
+            if (student.length > 0) {
+                const result = await pool.query('INSERT INTO pertenece (idCurso,idAlumno) VALUES (?,?)', [idCurso, id])
+                res.status(200).send({ message: 'Estudiante inscrito' });
+            }
+        } catch (error) {
+            res.status(401).send({
+                message: 'Estudiante no encontrado'
+            });
             console.log(error)
         }
     },

@@ -40,18 +40,37 @@ app.use('/api/chat', chatRoutes)
 
 const server = createServer(app)
 const io = new Server(server)
+// Registro de usuarios conectados
+const userSockets = new Map<string, string>(); // Mapa de userID a socketID
+
 io.on("connection", (socket) => {
-    console.log('User connected')
+    console.log('User connected');
+
+    // Asociar el socket con un usuario específico
+    socket.on("register", (userID) => {
+        userSockets.set(userID, socket.id);
+    });
+
     socket.on("disconnect", () => {
-        console.log('Disconnected')
-    })
+        console.log('Disconnected');
+        for (let [userID, socketID] of userSockets.entries()) {
+            if (socketID === socket.id) {
+                userSockets.delete(userID);
+                break;
+            }
+        }
+    });
+
+
     socket.on('chat message', async (message) => {
         if (await chatController.newMessage(message)) {
-            //io.emit('chat message', { mensaje: "Hola" })
-            console.log('registrado')
+            const receiverSocketId = userSockets.get(message.para);
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit('chat message', message);
+            }
         }
-    })
-})
+    });
+});
 server.listen(app.get('port'), () => {
     console.log('Listening at port ', app.get('port'))
 })

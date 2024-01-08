@@ -22,7 +22,6 @@ export const classesController = {
     },
     createClass: async (req: Request, res: Response) => {
         const { nombre, profesor } = req.body;
-        console.log(nombre, profesor)
         try {
             const result = await pool.execute('INSERT INTO curso (curso,profesor) VALUES (?,?)', [nombre, profesor])
             res.send({ message: "Creado exitosamente" })
@@ -32,11 +31,12 @@ export const classesController = {
     },
     updateClass: async (req: Request, res: Response) => {
         try {
-            const { asignatura, profesor } = req.body;
-            const result = await pool.execute('UPDATE clases SET asignatura=?,profesor=? WHERE idClases=?', [asignatura, profesor, req.params.id])
+            const { nombre, idCurso } = req.body;
+            const result = await pool.execute('UPDATE curso SET curso=? WHERE (idCurso =?)', [nombre, idCurso])
             res.send({ message: "Modificado exitosamente" })
         } catch (error) {
-
+            console.log(error)
+            res.status(401).send({ mesage: "Error" })
         }
     },
     deleteClass: async (req: Request, res: Response) => {

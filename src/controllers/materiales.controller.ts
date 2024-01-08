@@ -25,7 +25,7 @@ export const materialesController = {
             );
 
             // Enviar una respuesta de éxito
-            res.status(201).json({ message: 'Material creado con éxito' });
+            res.status(200).json({ message: 'Material creado con éxito' });
         } catch (error) {
             console.error('Error al crear el material:', error);
             res.status(500).send('Error en el servidor');
@@ -39,7 +39,6 @@ export const materialesController = {
         console.log(id)
         try {
             const result = await pool.execute('DELETE FROM materiales WHERE idMateriales =?', [id])
-            console.log(result)
             res.status(200).send({ message: 'Borrado existosamente' })
         } catch (error) {
             console.log(error)
