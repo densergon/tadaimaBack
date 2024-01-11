@@ -42,6 +42,7 @@ WHERE p.idCurso = ?`, [curso]);
                 const result = await pool.query('INSERT INTO pertenece (idCurso,idAlumno) VALUES (?,?)', [idCurso, id])
                 res.status(200).send({ message: 'Estudiante inscrito' });
             }
+            res.status(401).send({ message: 'Ya estabas inscrito' });
         } catch (error) {
             res.status(401).send({
                 message: 'Estudiante no encontrado'

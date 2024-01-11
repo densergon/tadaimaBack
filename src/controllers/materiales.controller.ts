@@ -8,11 +8,19 @@ export const materialesController = {
             const result = await pool.query('SELECT * FROM materiales WHERE curso=?', [id])
             res.status(200).send(result[0])
         } catch (error) {
-
+            console.log(error)
+            res.send({ message: 'Error' })
         }
     },
-    getMaterial: () => {
-
+    getMaterial: async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const result = await pool.query('SELECT * FROM materiales WHERE idMateriales=?', [id])
+            res.status(200).send(result[0])
+        } catch (error) {
+            console.log(error)
+            res.send({ messafge: 'Error' })
+        }
     },
     createMaterial: async (req: Request, res: Response) => {
         const { curso, uri, nombre } = req.body;
