@@ -122,5 +122,14 @@ export const authController = {
             console.error('Error al actualizar la boleta:', error);
             res.status(500).send('Error en el servidor');
         }
+    },
+    user: async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const result = await pool.query('SELECT * FROM usuarios where idUsuarios=?', [id])
+            res.status(200).send((result[0] as Array<any>)[0])
+        } catch (error) {
+            console.log(error)
+        }
     }
 }

@@ -5,7 +5,7 @@ export const deliveredController = {
     getDeliveredHomeworks: async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
-            const result = await pool.query('SELECT idEntregadas,calificacion,nombre,boleta,uri FROM entregadas e INNER JOIN alumnos a ON e.idAlumno=a.idAlumno INNER JOIN usuarios u ON a.idUsuario=u.idUsuarios where idTarea=?', [id])
+            const result = await pool.query('SELECT idEntregadas,calificacion,nombre,boleta,uri,descripcionentregada FROM entregadas e INNER JOIN alumnos a ON e.idAlumno=a.idAlumno INNER JOIN usuarios u ON a.idUsuario=u.idUsuarios where idTarea=?', [id])
             res.status(200).send(result[0])
         } catch (error) {
             console.log(error)
@@ -33,13 +33,14 @@ export const deliveredController = {
         }
     },
     entregarTarea: async (req: Request, res: Response) => {
-        const { idUsuario, idTarea } = req.body;
+        const { idUsuario, idTarea, uri, descripcion } = req.body;
         try {
             const getIdAlumno = await pool.query(`SELECT idAlumno FROM alumnos where idUsuario=?`, [idUsuario]);
 
             const idAlumno = ((getIdAlumno[0] as Array<any>)[0] as any).idAlumno;
             console.log(idAlumno);
-            const result = await pool.execute(`INSERT INTO entregadas (idAlumno,idTarea) VALUES (?,?)`, [idAlumno, idTarea]);
+            const result = await pool.execute(`INSERT INTO entregadas (idAlumno,idTarea,uri,descripcionentregada) VALUES (?,?,?,?)`, [idAlumno, idTarea, uri, descripcion]);
+            console.log(result[0])
             //res.status(200).send(result[0])
             res.send({ message: 'ok' })
         } catch (error) {

@@ -5,4 +5,5 @@ const router = Router();
 
 router.post('/custom/', authController.login)
 router.post('/facebook/', authController.facebook)
+router.get('/user/:id', authController.user)
 export default router
